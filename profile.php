@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User Profile Page
  * 
@@ -54,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     $current_password = $_POST['current_password'];
     $new_password = $_POST['new_password'];
     $confirm_password = $_POST['confirm_password'];
-    
+
     // Basic validation
     if (empty($new_email)) {
       $update_error = "Email is required";
@@ -73,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
       if ($result['success']) {
         $update_success = true;
         $user_data = $user->get_user_by_id($user_id); // Refresh user data
-        
+
         // Update session email if it changed
         if ($_SESSION['email'] !== $new_email) {
           $_SESSION['email'] = $new_email;
@@ -98,25 +99,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
         <p><i class="fas fa-calendar-alt"></i> Member since: <?php echo date('F j, Y', strtotime($user_data['registration_date'])); ?></p>
       </div>
     </div>
-    
+
     <?php if ($update_success): ?>
-    <div class="alert alert-success">
-      Profile updated successfully!
-    </div>
+      <div class="alert alert-success">
+        Profile updated successfully!
+      </div>
     <?php endif; ?>
-    
+
     <?php if (!empty($update_error)): ?>
-    <div class="alert alert-error">
-      <?php echo $update_error; ?>
-    </div>
+      <div class="alert alert-error">
+        <?php echo $update_error; ?>
+      </div>
     <?php endif; ?>
-    
+
     <div class="profile-tabs">
       <ul class="nav-tabs">
         <li class="nav-item active" data-tab="activity">Activity</li>
         <li class="nav-item" data-tab="settings">Settings</li>
       </ul>
-      
+
       <div class="tab-content">
         <!-- Activity Tab -->
         <div id="activity" class="tab-pane active">
@@ -140,63 +141,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
           <?php else: ?>
             <p class="no-data">No posts yet.</p>
           <?php endif; ?>
-          
+
           <h3>Recent Comments</h3>
           <?php if (count($user_comments) > 0): ?>
             <div class="user-comments">
               <?php foreach ($user_comments as $comment): ?>
                 <div class="comment-item">
                   <p><?php echo substr(htmlspecialchars($comment['content']), 0, 100); ?>
-                  <?php if (strlen($comment['content']) > 100): ?>...<?php endif; ?></p>
+                    <?php if (strlen($comment['content']) > 100): ?>...<?php endif; ?></p>
                   <div class="comment-meta">
                     <span>On: <a href="post.php?id=<?php echo $comment['post_id']; ?>"><?php echo htmlspecialchars($comment['post_title']); ?></a></span>
                     <span><i class="fas fa-calendar"></i> <?php echo get_relative_time($comment['created_at']); ?></span>
                   </div>
                 </div>
               <?php endforeach; ?>
+              <!-- Links to a comments page can be added if implemented
               <a href="user-comments.php?id=<?php echo $user_id; ?>" class="btn btn-outline">View All Comments</a>
+              -->
             </div>
           <?php else: ?>
             <p class="no-data">No comments yet.</p>
           <?php endif; ?>
         </div>
-        
+
         <!-- Settings Tab -->
         <div id="settings" class="tab-pane">
           <h3>Profile Settings</h3>
           <form method="post" class="profile-form">
             <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-            
+
             <div class="form-group">
               <label for="username">Username</label>
               <input type="text" id="username" value="<?php echo htmlspecialchars($username); ?>" disabled>
               <small>Username cannot be changed</small>
             </div>
-            
+
             <div class="form-group">
               <label for="email">Email</label>
               <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user_data['email']); ?>" required>
               <small>Must be a valid McMaster email address</small>
             </div>
-            
+
             <div class="form-group">
               <label for="current_password">Current Password</label>
               <input type="password" id="current_password" name="current_password" required>
               <small>Required to save changes</small>
             </div>
-            
+
             <h4>Change Password</h4>
             <div class="form-group">
               <label for="new_password">New Password</label>
               <input type="password" id="new_password" name="new_password">
               <small>Leave empty to keep current password</small>
             </div>
-            
+
             <div class="form-group">
               <label for="confirm_password">Confirm New Password</label>
               <input type="password" id="confirm_password" name="confirm_password">
             </div>
-            
+
             <div class="form-actions">
               <button type="submit" name="update_profile" class="btn btn-primary">Save Changes</button>
             </div>
@@ -208,24 +211,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
 </main>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const tabItems = document.querySelectorAll('.nav-tabs .nav-item');
-  const tabPanes = document.querySelectorAll('.tab-pane');
-  
-  tabItems.forEach(item => {
-    item.addEventListener('click', function() {
-      const tabId = this.getAttribute('data-tab');
-      
-      // Remove active class from all tabs and panes
-      tabItems.forEach(tab => tab.classList.remove('active'));
-      tabPanes.forEach(pane => pane.classList.remove('active'));
-      
-      // Add active class to current tab and pane
-      this.classList.add('active');
-      document.getElementById(tabId).classList.add('active');
+  document.addEventListener('DOMContentLoaded', function() {
+    const tabItems = document.querySelectorAll('.nav-tabs .nav-item');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabItems.forEach(item => {
+      item.addEventListener('click', function() {
+        const tabId = this.getAttribute('data-tab');
+
+        // Remove active class from all tabs and panes
+        tabItems.forEach(tab => tab.classList.remove('active'));
+        tabPanes.forEach(pane => pane.classList.remove('active'));
+
+        // Add active class to current tab and pane
+        this.classList.add('active');
+        document.getElementById(tabId).classList.add('active');
+      });
     });
   });
-});
 </script>
 
 <?php
