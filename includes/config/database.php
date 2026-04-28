@@ -13,6 +13,7 @@ class Database
   private $db_name = "mawyinl_db";
   private $username = "root";
   private $password = "";
+  private $port = '3307';
   private $conn;
 
   /**
@@ -29,7 +30,7 @@ class Database
       date_default_timezone_set("America/Toronto");
 
       // Create connection with error mode set to exceptions
-      $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
+      $this->conn = new PDO("mysql:host=" . $this->host . ";port=" . $this->port . ";dbname=" . $this->db_name, $this->username, $this->password);
 
       // Set PDO attributes for consistent behavior
       $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

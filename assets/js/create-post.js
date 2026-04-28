@@ -205,8 +205,10 @@ document.addEventListener("DOMContentLoaded", () => {
         } 
         // Simple show/hide fallback
         else {
+          document.body.style.overflow = 'hidden';
           modal.style.display = 'block';
           modal.classList.add('show');
+          modal.style.overflowY = 'auto';
           
           // Add close button handler
           const closeButtons = modal.querySelectorAll('[data-dismiss="modal"]');
@@ -214,6 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
             button.addEventListener('click', function() {
               modal.style.display = 'none';
               modal.classList.remove('show');
+              document.body.style.overflow = 'auto';
             });
           });
         }
